@@ -2,10 +2,15 @@
 (function () {
   'use strict';
 
-  /* ---------- 开场动画退场（大圣驾筋斗云） ----------
-     head 引导脚本已判定本会话是否播；这里负责 load 即退场 + 写会话标记 + 2.5 秒强制退场。 */
+  /* ---------- 开场动画（大圣驾筋斗云 · 两段式） ----------
+     head 引导脚本已判定本会话是否播。第一段 v11「在飞」=加载中；
+     window load（=抵达天门）后 crossfade 到第二段 v12「指南天门」收尾，停留约 500ms 再整体淡出移除。
+     纪律：v11 至少展示 800ms 才切；load 不来时最迟 1.9s 强制进收尾拍；3s 硬上限必退场；
+     退场时写 sessionStorage 标记。baseof 内联兜底与此同口径（主脚本没加载时兜底走时序）。 */
   var pre = document.getElementById('preloader');
   if (pre) {
+    var plT0 = Date.now();
+    var plArrived = false;
     var plDone = false;
     var dismissPre = function () {
       if (plDone) return;
@@ -15,10 +20,22 @@
       pre.classList.add('pl-done');
       setTimeout(function () { if (pre.parentNode) pre.parentNode.removeChild(pre); }, 650);
     };
+    var arrivePre = function () {
+      if (plArrived || plDone) return;
+      plArrived = true;
+      pre.classList.add('pl-arrive');
+      setTimeout(dismissPre, 500); /* 收尾图停留一拍再退场 */
+    };
+    var maybeArrive = function () {
+      var left = 800 - (Date.now() - plT0); /* 第一段至少展示 800ms，两拍都看得见 */
+      if (left <= 0) arrivePre();
+      else setTimeout(arrivePre, left);
+    };
     if (document.documentElement.classList.contains('show-preloader')) {
-      if (document.readyState === 'complete') dismissPre();
-      else window.addEventListener('load', dismissPre);
-      setTimeout(dismissPre, 2500);
+      if (document.readyState === 'complete') maybeArrive();
+      else window.addEventListener('load', maybeArrive);
+      setTimeout(maybeArrive, 1900); /* load 迟到：最迟 1.9s 强制抵达 */
+      setTimeout(dismissPre, 3000);  /* 硬上限：3 秒内必退场 */
     } else if (pre.parentNode) {
       pre.parentNode.removeChild(pre); /* 不播的页面直接移除，不留 DOM */
     }

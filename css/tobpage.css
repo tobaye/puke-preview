@@ -572,9 +572,10 @@ h1, h2, h3, h4 { font-family: var(--font-title); color: var(--text-strong); line
   .term-badge { width: 60px; height: 60px; border-radius: 16px; }
 }
 
-/* ---------- 开场动画（大圣驾筋斗云 · preloader） ----------
+/* ---------- 开场动画（大圣驾筋斗云 · preloader · 两段式） ----------
    仅当 <html> 带 .show-preloader（head 引导脚本判定：本会话首次 + 非减动效）时显示；
-   window load 即退场，2.5 秒强制退场（baseof 内联兜底 + tobpage.js 双保险）。 */
+   第一段 v11「在飞」（加载中）→ load 触发（或最迟 1.9s）crossfade 到第二段 v12「指南天门」收尾，
+   收尾图停留约 500ms 后整体淡出；3 秒硬上限必退场（baseof 内联兜底 + tobpage.js 双保险）。 */
 #preloader {
   display: none;
   position: fixed; inset: 0; z-index: 2000;
@@ -583,21 +584,26 @@ h1, h2, h3, h4 { font-family: var(--font-title); color: var(--text-strong); line
 }
 html.show-preloader #preloader { display: flex; }
 #preloader.pl-done { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .55s ease, visibility .55s; }
-.pl-inner { position: relative; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+.pl-inner { position: relative; display: flex; flex-direction: column; align-items: center; padding: 20px; transition: transform .45s ease; }
+#preloader.pl-arrive .pl-inner { transform: scale(.97); } /* 抵达时轻微收束，像落定 */
 .pl-swirl {
   position: absolute; top: 50%; left: 50%; width: 300px; height: 300px;
   transform: translate(-50%, -58%);
   color: var(--gold); opacity: .35;
   animation: pl-spin 26s linear infinite;
 }
-.pl-fly { animation: pl-in .85s cubic-bezier(.22, .8, .3, 1) both; }
+.pl-fly { position: relative; animation: pl-in .85s cubic-bezier(.22, .8, .3, 1) both; }
 .pl-wukong {
-  /* v10 定版图为竖幅且棒尖弧光/棒尾贴近画面边缘，不再用径向遮罩裁边；
+  /* 两段图均为 660×778 纯黑底定版，不用径向遮罩裁边；
      纯黑底靠 mix-blend-mode: screen 与 overlay 融合（黑像素在 screen 下即透明）。 */
   width: min(74vw, 320px); height: auto; display: block;
   mix-blend-mode: screen;
+  transition: opacity .3s ease;
   animation: pl-bob 2.3s ease-in-out .85s infinite alternate;
 }
+.pl-img-b { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
+#preloader.pl-arrive .pl-img-a { opacity: 0; }
+#preloader.pl-arrive .pl-img-b { opacity: 1; }
 .pl-name {
   margin-top: 6px;
   font-family: var(--font-title); font-size: 27px; font-weight: 600;
