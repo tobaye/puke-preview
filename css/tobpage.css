@@ -443,6 +443,7 @@ h1, h2, h3, h4 { font-family: var(--font-title); color: var(--text-strong); line
     display: none; position: absolute; top: 62px; left: 0; right: 0;
     flex-direction: column; align-items: stretch; gap: 0; padding: 10px 16px 16px;
     background: var(--header-bg); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-soft);
+    background: var(--bg); /* 移动抽屉用近实底，避免 backdrop-filter 不生效时透出正文显得乱 */
   }
   .site-nav.open { display: flex; }
   .site-nav ul { flex-direction: column; }
@@ -549,8 +550,79 @@ h1, h2, h3, h4 { font-family: var(--font-title); color: var(--text-strong); line
     background: transparent; border: none; box-shadow: none; transition: none;
   }
   .site-nav .nav-drop::before { display: none; }
-  .has-drop:hover .nav-drop, .has-drop:focus-within .nav-drop { display: none; }
-  .has-drop.open .nav-drop { display: flex; }
+  /* 桌面 hover/focus 规则特异性 0,3,0，其 transform 会漏进移动端把展开的子菜单推出屏外，
+     必须在同等特异性上把 transform 一并重置（见 DESIGN.md「移动端菜单 bug 根因」）。 */
+  .has-drop:hover .nav-drop, .has-drop:focus-within .nav-drop { display: none; transform: none; }
+  .has-drop.open .nav-drop { display: flex; transform: none; opacity: 1; visibility: visible; }
   .term-header { gap: 13px; }
   .term-badge { width: 60px; height: 60px; border-radius: 16px; }
+}
+
+/* ---------- 开场动画（大圣驾筋斗云 · preloader） ----------
+   仅当 <html> 带 .show-preloader（head 引导脚本判定：本会话首次 + 非减动效）时显示；
+   window load 即退场，2.5 秒强制退场（baseof 内联兜底 + tobpage.js 双保险）。 */
+#preloader {
+  display: none;
+  position: fixed; inset: 0; z-index: 2000;
+  background: #0c0b09;
+  align-items: center; justify-content: center;
+}
+html.show-preloader #preloader { display: flex; }
+#preloader.pl-done { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .55s ease, visibility .55s; }
+.pl-inner { position: relative; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+.pl-swirl {
+  position: absolute; top: 50%; left: 50%; width: 300px; height: 300px;
+  transform: translate(-50%, -58%);
+  color: var(--gold); opacity: .35;
+  animation: pl-spin 26s linear infinite;
+}
+.pl-fly { animation: pl-in .85s cubic-bezier(.22, .8, .3, 1) both; }
+.pl-wukong {
+  width: min(74vw, 330px); height: auto; display: block;
+  mix-blend-mode: screen;
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 60%, transparent 76%);
+  mask-image: radial-gradient(ellipse at center, #000 60%, transparent 76%);
+  animation: pl-bob 2.3s ease-in-out .85s infinite alternate;
+}
+.pl-name {
+  margin-top: 6px;
+  font-family: var(--font-title); font-size: 27px; font-weight: 600;
+  color: var(--gold-bright); letter-spacing: .5em; text-indent: .5em;
+  animation: pl-fade .8s ease .35s both;
+}
+.pl-bar {
+  margin-top: 18px; width: 168px; height: 2px; border-radius: 2px;
+  background: rgba(201, 162, 75, .16); overflow: hidden;
+  animation: pl-fade .8s ease .5s both;
+}
+.pl-bar span {
+  display: block; height: 100%; width: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--red));
+  transform-origin: left;
+  animation: pl-scan 1.15s ease-in-out infinite;
+}
+@keyframes pl-in {
+  from { opacity: 0; transform: translateX(-64px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes pl-bob {
+  from { transform: translateY(-7px); }
+  to { transform: translateY(7px); }
+}
+@keyframes pl-fade {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pl-scan {
+  0% { transform: scaleX(0); transform-origin: left; }
+  55% { transform: scaleX(1); transform-origin: left; }
+  56% { transform-origin: right; }
+  100% { transform: scaleX(0); transform-origin: right; }
+}
+@keyframes pl-spin {
+  from { transform: translate(-50%, -58%) rotate(0deg); }
+  to { transform: translate(-50%, -58%) rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #preloader { display: none !important; }
 }

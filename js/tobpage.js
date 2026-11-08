@@ -2,6 +2,28 @@
 (function () {
   'use strict';
 
+  /* ---------- 开场动画退场（大圣驾筋斗云） ----------
+     head 引导脚本已判定本会话是否播；这里负责 load 即退场 + 写会话标记 + 2.5 秒强制退场。 */
+  var pre = document.getElementById('preloader');
+  if (pre) {
+    var plDone = false;
+    var dismissPre = function () {
+      if (plDone) return;
+      plDone = true;
+      try { sessionStorage.setItem('tobpage-loaded', '1'); } catch (e) {}
+      if (!pre.parentNode) return;
+      pre.classList.add('pl-done');
+      setTimeout(function () { if (pre.parentNode) pre.parentNode.removeChild(pre); }, 650);
+    };
+    if (document.documentElement.classList.contains('show-preloader')) {
+      if (document.readyState === 'complete') dismissPre();
+      else window.addEventListener('load', dismissPre);
+      setTimeout(dismissPre, 2500);
+    } else if (pre.parentNode) {
+      pre.parentNode.removeChild(pre); /* 不播的页面直接移除，不留 DOM */
+    }
+  }
+
   /* ---------- 深浅色切换（引导脚本在 baseof <head> 里先行定调，防闪烁） ---------- */
   var toggle = document.getElementById('theme-toggle');
   if (toggle) {
@@ -39,10 +61,10 @@
     });
   });
 
-  /* ---------- 本站已运行天数（起算日默认 2026-10-29，上线当天记为第 1 天；口径与现站一致） ---------- */
+  /* ---------- 本站已运行天数（起算日由站点 params.tobpage.startDate 配置，页脚元素带 data-start 才渲染；上线当天记为第 1 天） ---------- */
   var up = document.getElementById('site-uptime-days');
-  if (up) {
-    var parts = String(up.dataset.start || '2026-10-29').split('-');
+  if (up && up.dataset.start) {
+    var parts = String(up.dataset.start).split('-');
     var start = new Date(+parts[0], (+parts[1] || 1) - 1, +parts[2] || 1);
     var now = new Date();
     var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
