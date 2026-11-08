@@ -154,6 +154,7 @@ h1, h2, h3, h4 { font-family: var(--font-title); color: var(--text-strong); line
   display: flex; align-items: center; justify-content: center; gap: .85em;
   font-family: var(--font-kai); color: var(--motto);
   letter-spacing: .5em; margin: 0 0 10px; font-size: 17px;
+  white-space: nowrap; /* 主旨语全宽度单行，印章紧跟句末不落单 */
 }
 .hero-motto::before, .hero-motto::after { content: ""; flex: 0 0 34px; height: 1px; }
 .hero-motto::before { background: linear-gradient(90deg, transparent, var(--gold-dim)); }
@@ -574,7 +575,7 @@ h1, h2, h3, h4 { font-family: var(--font-title); color: var(--text-strong); line
 }
 
 /* ---------- 开场动画（大圣驾筋斗云 · preloader · 两段式） ----------
-   仅当 <html> 带 .show-preloader（head 引导脚本判定：本会话首次 + 非减动效）时显示；
+   仅当 <html> 带 .show-preloader（head 引导脚本判定：首页 + 非减动效）时显示；
    第一段 v11「在飞」（加载中）→ load 触发（或最迟 1.9s）crossfade 到第二段 v12「指南天门」收尾，
    收尾图停留约 500ms 后整体淡出；3 秒硬上限必退场（baseof 内联兜底 + tobpage.js 双保险）。 */
 #preloader {
@@ -616,6 +617,7 @@ html.show-preloader #preloader { display: flex; }
   display: flex; align-items: center; justify-content: center; gap: .85em;
   font-family: var(--font-kai); font-size: 16px;
   color: var(--motto); letter-spacing: .5em;
+  white-space: nowrap; /* 与 Hero 主旨行同口径：全宽度单行 */
   animation: pl-fade .8s ease .65s both;
 }
 .pl-motto::before, .pl-motto::after { content: ""; flex: 0 0 26px; height: 1px; }
@@ -656,4 +658,11 @@ html.show-preloader #preloader { display: flex; }
 }
 @media (prefers-reduced-motion: reduce) {
   #preloader { display: none !important; }
+}
+/* 窄屏主旨行收一档：字距收紧、字号略降，保证整句一行、印章紧跟句号（2026-11-08 加句号后折行修复） */
+@media (max-width: 480px) {
+  .hero-motto { letter-spacing: .28em; font-size: 15.5px; }
+  .hero-motto::before, .hero-motto::after { flex-basis: 22px; }
+  .pl-motto { letter-spacing: .28em; font-size: 15px; }
+  .pl-motto::before, .pl-motto::after { flex-basis: 18px; }
 }

@@ -3,10 +3,11 @@
   'use strict';
 
   /* ---------- 开场动画（大圣驾筋斗云 · 两段式） ----------
-     head 引导脚本已判定本会话是否播。第一段 v11「在飞」=加载中；
+     播放规则（2026-11-08 改版）：只在首页渲染（baseof 以 .IsHome 判断）、每次打开首页都播，无会话抑制；
+     内页根本没有 #preloader 节点。第一段 v11「在飞」=加载中；
      window load（=抵达天门）后 crossfade 到第二段 v12「指南天门」收尾，停留约 500ms 再整体淡出移除。
-     纪律：v11 至少展示 800ms 才切；load 不来时最迟 1.9s 强制进收尾拍；3s 硬上限必退场；
-     退场时写 sessionStorage 标记。baseof 内联兜底与此同口径（主脚本没加载时兜底走时序）。 */
+     纪律：v11 至少展示 800ms 才切；load 不来时最迟 1.9s 强制进收尾拍；3s 硬上限必退场。
+     baseof 内联兜底与此同口径（主脚本没加载时兜底走时序）。 */
   var pre = document.getElementById('preloader');
   if (pre) {
     var plT0 = Date.now();
@@ -15,7 +16,6 @@
     var dismissPre = function () {
       if (plDone) return;
       plDone = true;
-      try { sessionStorage.setItem('tobpage-loaded', '1'); } catch (e) {}
       if (!pre.parentNode) return;
       pre.classList.add('pl-done');
       setTimeout(function () { if (pre.parentNode) pre.parentNode.removeChild(pre); }, 650);
