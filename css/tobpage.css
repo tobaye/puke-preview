@@ -31,6 +31,8 @@
   --font-title: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
   --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
   --font-poem: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+  --font-kai: "Kaiti SC", "STKaiti", "KaiTi", "楷体", var(--font-title);
+  --motto: var(--red-bright); /* 主旨语专用朱砂：暗底走提亮赤，浅色随 --red-bright 变深保证纸面可读 */
 }
 
 /* ---------- 变量：浅色（深灰纸面，沉稳版） ---------- */
@@ -146,7 +148,19 @@ h1, h2, h3, h4 { font-family: var(--font-title); color: var(--text-strong); line
   -webkit-background-clip: text; background-clip: text; color: transparent;
   text-shadow: 0 0 42px rgba(201, 162, 75, .0);
 }
-.hero-motto { font-family: var(--font-title); color: var(--gold-bright); letter-spacing: .5em; margin: 0 0 8px; font-size: 15px; text-indent: .5em; }
+/* 主旨语：楷体 + 朱砂 + 两侧黯金细线 + 行尾印点，与鎏金大标题/灰白副标题拉开古朴差别（Hero 与开场动画同一套） */
+.hero-motto {
+  display: flex; align-items: center; justify-content: center; gap: .85em;
+  font-family: var(--font-kai); color: var(--motto);
+  letter-spacing: .5em; margin: 0 0 10px; font-size: 17px;
+}
+.hero-motto::before, .hero-motto::after { content: ""; flex: 0 0 34px; height: 1px; }
+.hero-motto::before { background: linear-gradient(90deg, transparent, var(--gold-dim)); }
+.hero-motto::after { background: linear-gradient(90deg, var(--gold-dim), transparent); }
+.motto-seal {
+  flex: 0 0 auto; width: 7px; height: 7px; border-radius: 1.5px;
+  background: var(--red-bright);
+}
 .hero-sub { color: #ddd3ba; font-size: 17px; margin: 0 auto 22px; max-width: 620px; text-shadow: 0 2px 14px rgba(0,0,0,.7); }
 .hero-stats { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 26px; }
 .hero-stats span {
@@ -591,11 +605,15 @@ html.show-preloader #preloader { display: flex; }
   animation: pl-fade .8s ease .35s both;
 }
 .pl-motto {
-  margin-top: 12px;
-  font-family: var(--font-title); font-size: 15px;
-  color: var(--gold); letter-spacing: .55em; text-indent: .55em;
+  margin-top: 14px;
+  display: flex; align-items: center; justify-content: center; gap: .85em;
+  font-family: var(--font-kai); font-size: 16px;
+  color: var(--motto); letter-spacing: .5em;
   animation: pl-fade .8s ease .65s both;
 }
+.pl-motto::before, .pl-motto::after { content: ""; flex: 0 0 26px; height: 1px; }
+.pl-motto::before { background: linear-gradient(90deg, transparent, var(--gold-dim)); }
+.pl-motto::after { background: linear-gradient(90deg, var(--gold-dim), transparent); }
 .pl-bar {
   margin-top: 18px; width: 168px; height: 2px; border-radius: 2px;
   background: rgba(201, 162, 75, .16); overflow: hidden;
