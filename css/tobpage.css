@@ -456,3 +456,101 @@ h1, h2, h3, h4 { font-family: var(--font-title); color: var(--text-strong); line
   .footer-inner { grid-template-columns: 1fr; }
   .container { padding-top: 24px; }
 }
+
+/* ---------- 图标（内联 SVG sprite 引用） ---------- */
+.ic { display: inline-block; vertical-align: -0.14em; flex: 0 0 auto; }
+
+/* ---------- 页眉栏目导航（下拉） ---------- */
+.site-nav .nav-list { align-items: center; }
+.nav-item { position: relative; }
+.site-nav .nav-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 13px; border-radius: 999px; color: var(--text); font-size: 15px; white-space: nowrap;
+}
+.site-nav .nav-link.active { background: linear-gradient(90deg, var(--gold), var(--gold-bright)); color: #171204; font-weight: 600; }
+.site-nav .nav-link.active .ic { color: #171204 !important; }
+.nav-caret { opacity: .75; transition: transform .2s ease; }
+.has-drop:hover .nav-caret, .has-drop:focus-within .nav-caret, .has-drop.open .nav-caret { transform: rotate(180deg); }
+.site-nav .nav-drop {
+  position: absolute; top: 100%; left: 50%; z-index: 1001;
+  min-width: 198px; margin: 8px 0 0; padding: 8px;
+  display: flex; flex-direction: column; gap: 2px;
+  list-style: none;
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  box-shadow: var(--shadow-hover);
+  opacity: 0; visibility: hidden; transform: translate(-50%, 8px);
+  transition: opacity .18s ease, transform .18s ease, visibility .18s;
+}
+.site-nav .nav-drop::before { content: ""; position: absolute; top: -10px; left: 0; right: 0; height: 10px; }
+.has-drop:hover .nav-drop, .has-drop:focus-within .nav-drop {
+  opacity: 1; visibility: visible; transform: translate(-50%, 0);
+}
+.site-nav .nav-drop a {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 11px; border-radius: 10px; color: var(--text); font-size: 14.5px;
+}
+.site-nav .nav-drop a:hover { background: rgba(201, 162, 75, .10); color: var(--gold-bright); }
+.nav-dot { margin-left: auto; width: 7px; height: 7px; border-radius: 50%; flex: 0 0 auto; }
+
+/* ---------- 分类胶囊（卡片/文章页，颜色走 --cat 变量） ---------- */
+.meta-cat.cat-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--cat) 55%, transparent);
+  background: color-mix(in srgb, var(--cat) 13%, transparent);
+}
+.meta-cat.cat-chip .ic { color: var(--cat); }
+.meta-cat.cat-chip:hover {
+  color: var(--text-strong);
+  background: color-mix(in srgb, var(--cat) 24%, transparent);
+  border-color: var(--cat);
+}
+.post-meta .cat-chip + .cat-chip { margin-left: 6px; }
+
+/* ---------- 分类页：大图标徽章 + 分组索引 ---------- */
+.term-header { display: flex; align-items: center; gap: 18px; }
+.term-badge {
+  flex: 0 0 auto; width: 76px; height: 76px; border-radius: 20px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1.5px solid color-mix(in srgb, var(--cat) 55%, transparent);
+  background: color-mix(in srgb, var(--cat) 13%, transparent);
+  box-shadow: var(--shadow);
+}
+.term-heading h1 { margin: 0 0 4px; }
+.term-heading p { margin: 0; }
+.cat-group { margin-top: 36px; scroll-margin-top: 84px; }
+.cat-group-title {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 22px; margin: 0 0 16px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.term-card.cat-card { align-items: flex-start; gap: 9px; border-top: 3px solid var(--cat); }
+.term-card.cat-card:hover { border-color: var(--border-soft); border-top-color: var(--cat); }
+.cat-card-icon {
+  width: 58px; height: 58px; border-radius: 15px;
+  display: flex; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--cat) 13%, transparent);
+  border: 1px solid color-mix(in srgb, var(--cat) 40%, transparent);
+}
+.term-card.is-empty { opacity: .55; box-shadow: none; }
+.term-card.is-empty:hover { transform: none; }
+
+/* ---------- 侧栏分类列表（图标 + 计数右置） ---------- */
+.cat-list li a { justify-content: flex-start; gap: 8px; }
+.cat-list .cat-count { margin-left: auto; }
+
+/* ---------- 栏目导航 · 移动端（手风琴） ---------- */
+@media (max-width: 720px) {
+  .site-nav .nav-list { align-items: stretch; }
+  .site-nav .nav-link { display: flex; width: 100%; }
+  .site-nav .nav-drop {
+    position: static; min-width: 0; margin: 0; padding: 2px 0 6px 16px;
+    display: none; opacity: 1; visibility: visible; transform: none;
+    background: transparent; border: none; box-shadow: none; transition: none;
+  }
+  .site-nav .nav-drop::before { display: none; }
+  .has-drop:hover .nav-drop, .has-drop:focus-within .nav-drop { display: none; }
+  .has-drop.open .nav-drop { display: flex; }
+  .term-header { gap: 13px; }
+  .term-badge { width: 60px; height: 60px; border-radius: 16px; }
+}

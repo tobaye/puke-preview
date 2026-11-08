@@ -23,6 +23,22 @@
     });
   }
 
+  /* ---------- 栏目下拉：移动端手风琴（桌面端走 CSS hover/focus） ----------
+     窄屏下第一次点父栏目只展开子菜单（并收起其他已展开的），已展开时再点才跳转到分类索引分组。 */
+  var dropParents = document.querySelectorAll('.has-drop > .nav-parent');
+  Array.prototype.forEach.call(dropParents, function (link) {
+    link.addEventListener('click', function (e) {
+      if (!window.matchMedia('(max-width: 720px)').matches) return;
+      var li = link.parentElement;
+      if (li.classList.contains('open')) return;
+      e.preventDefault();
+      Array.prototype.forEach.call(document.querySelectorAll('.has-drop.open'), function (o) {
+        if (o !== li) o.classList.remove('open');
+      });
+      li.classList.add('open');
+    });
+  });
+
   /* ---------- 本站已运行天数（起算日默认 2026-10-29，上线当天记为第 1 天；口径与现站一致） ---------- */
   var up = document.getElementById('site-uptime-days');
   if (up) {
