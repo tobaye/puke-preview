@@ -590,6 +590,12 @@ html.show-preloader #preloader { display: flex; }
   color: var(--gold-bright); letter-spacing: .5em; text-indent: .5em;
   animation: pl-fade .8s ease .35s both;
 }
+.pl-motto {
+  margin-top: 12px;
+  font-family: var(--font-title); font-size: 15px;
+  color: var(--gold); letter-spacing: .55em; text-indent: .55em;
+  animation: pl-fade .8s ease .65s both;
+}
 .pl-bar {
   margin-top: 18px; width: 168px; height: 2px; border-radius: 2px;
   background: rgba(201, 162, 75, .16); overflow: hidden;
