@@ -139,6 +139,7 @@ h1, h2, h3, h4 { font-family: var(--font-title); color: var(--text-strong); line
   position: absolute; inset: 0; z-index: -1;
   background:
     linear-gradient(180deg, rgba(6, 5, 4, .42) 0%, rgba(6, 5, 4, .18) 38%, rgba(12, 11, 9, .88) 88%, var(--bg) 100%),
+    radial-gradient(680px 320px at 50% 46%, rgba(6, 5, 4, .38), transparent 70%),
     radial-gradient(720px 320px at 50% 42%, rgba(201, 162, 75, .13), transparent 65%);
 }
 .hero-content { text-align: center; padding: 56px 20px 84px; max-width: 860px; }

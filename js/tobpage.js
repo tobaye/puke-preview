@@ -155,7 +155,7 @@
     function loadIndex() {
       if (indexData || loading) return;
       loading = true;
-      fetch('/index.json')
+      fetch(input.dataset.index || '/index.json')
         .then(function (r) { return r.json(); })
         .then(function (data) { indexData = data; loading = false; runSearch(); })
         .catch(function () {
