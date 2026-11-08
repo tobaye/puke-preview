@@ -592,10 +592,10 @@ html.show-preloader #preloader { display: flex; }
 }
 .pl-fly { animation: pl-in .85s cubic-bezier(.22, .8, .3, 1) both; }
 .pl-wukong {
-  width: min(74vw, 330px); height: auto; display: block;
+  /* v10 定版图为竖幅且棒尖弧光/棒尾贴近画面边缘，不再用径向遮罩裁边；
+     纯黑底靠 mix-blend-mode: screen 与 overlay 融合（黑像素在 screen 下即透明）。 */
+  width: min(74vw, 320px); height: auto; display: block;
   mix-blend-mode: screen;
-  -webkit-mask-image: radial-gradient(ellipse at center, #000 60%, transparent 76%);
-  mask-image: radial-gradient(ellipse at center, #000 60%, transparent 76%);
   animation: pl-bob 2.3s ease-in-out .85s infinite alternate;
 }
 .pl-name {
