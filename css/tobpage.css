@@ -5,6 +5,16 @@
    换皮入口：只改下面两组 CSS 变量即可换主色与整体色调
    ============================================================ */
 
+/* 印章篆书子集字体（仅印章几字，自托管零外部请求）：字形源为全字庫說文解字，
+   數位發展部，CNS11643中文標準交換碼全字庫網站，https://www.cns11643.gov.tw
+   依《政府資料開放授權條款－第 1 版》子集化并改家族名为 Tobpage Seal */
+@font-face {
+  font-family: "Tobpage Seal";
+  src: url("../fonts/tobpage-seal.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
 /* ---------- 变量：暗色（默认气质） ---------- */
 :root {
   --gold: #c9a24b;
@@ -149,24 +159,33 @@ h1, h2, h3, h4 { font-family: var(--font-title); color: var(--text-strong); line
   -webkit-background-clip: text; background-clip: text; color: transparent;
   text-shadow: 0 0 42px rgba(201, 162, 75, .0);
 }
-/* 主旨语：楷体 + 朱砂 + 两侧黯金细线 + 行尾印点，与鎏金大标题/灰白副标题拉开古朴差别（Hero 与开场动画同一套） */
+/* 主旨语：楷体 + 朱砂 + 两侧黯金细线 + 行尾钤印，与鎏金大标题拉开古朴差别（Hero 与开场动画同一套；2026-11-09 放大定版） */
 .hero-motto {
   display: flex; align-items: center; justify-content: center; gap: .85em;
   font-family: var(--font-kai); color: var(--motto);
-  letter-spacing: .5em; margin: 0 0 10px; font-size: 17px;
+  letter-spacing: .32em; margin: 0 0 14px; font-size: 29px;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, .6);
   white-space: nowrap; /* 主旨语全宽度单行，印章紧跟句末不落单 */
 }
 .hero-motto::before, .hero-motto::after { content: ""; flex: 0 0 34px; height: 1px; }
 .hero-motto::before { background: linear-gradient(90deg, transparent, var(--gold-dim)); }
 .hero-motto::after { background: linear-gradient(90deg, var(--gold-dim), transparent); }
-.motto-seal {
-  flex: 0 0 auto; width: 7px; height: 7px; border-radius: 1.5px;
-  background: var(--red-bright);
+/* 印章：朱砂底、宣纸字、篆书竖排 2×2（右列起读），微倾如钤盖；文字由站点 params.tobpage.sealText 配置，不配不渲染 */
+.site-seal {
+  flex: 0 0 auto;
+  writing-mode: vertical-rl; text-orientation: upright;
+  font-family: "Tobpage Seal", "STKaiti", "KaiTi", var(--font-kai);
+  color: #f8efdb; background: linear-gradient(145deg, #ce4832, #a52f1e);
+  border-radius: 6px; letter-spacing: .04em; line-height: 1.1;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .38), inset 0 0 0 1.5px rgba(248, 239, 219, .4);
+  transform: rotate(-5deg);
 }
-.hero-sub { color: #ddd3ba; font-size: 17px; margin: 0 auto 22px; max-width: 620px; text-shadow: 0 2px 14px rgba(0,0,0,.7); }
+.seal-hero { width: 66px; height: 66px; font-size: 25px; padding: 6px 5px; }
+.seal-loader { width: 47px; height: 47px; font-size: 18.5px; padding: 5px 3px; }
+.hero-sub { color: #ddd3ba; font-size: 15px; margin: 0 auto 18px; max-width: 620px; text-shadow: 0 2px 14px rgba(0,0,0,.7); }
 .hero-stats { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 26px; }
 .hero-stats span {
-  padding: 5px 15px; border-radius: 999px; font-size: 13.5px; color: #e9dfc4;
+  padding: 4px 12px; border-radius: 999px; font-size: 12.5px; color: #e9dfc4;
   border: 1px solid rgba(232, 194, 104, .45); background: rgba(10, 8, 5, .45); backdrop-filter: blur(4px);
 }
 .hero-btn {
@@ -615,8 +634,8 @@ html.show-preloader #preloader { display: flex; }
 .pl-motto {
   margin-top: 14px;
   display: flex; align-items: center; justify-content: center; gap: .85em;
-  font-family: var(--font-kai); font-size: 16px;
-  color: var(--motto); letter-spacing: .5em;
+  font-family: var(--font-kai); font-size: 23px;
+  color: var(--motto); letter-spacing: .32em;
   white-space: nowrap; /* 与 Hero 主旨行同口径：全宽度单行 */
   animation: pl-fade .8s ease .65s both;
 }
@@ -659,10 +678,19 @@ html.show-preloader #preloader { display: flex; }
 @media (prefers-reduced-motion: reduce) {
   #preloader { display: none !important; }
 }
-/* 窄屏主旨行收一档：字距收紧、字号略降，保证整句一行、印章紧跟句号（2026-11-08 加句号后折行修复） */
+/* 窄屏主旨行逐档收紧：字距收紧、字号与印章略降，保证整句一行、印章紧跟句号（2026-11-08 折行修复口径，2026-11-09 放大后沿用） */
+@media (max-width: 720px) {
+  .hero-motto { font-size: 24px; letter-spacing: .26em; }
+  .seal-hero { width: 56px; height: 56px; font-size: 22px; }
+  .pl-motto { font-size: 20px; letter-spacing: .26em; }
+  .seal-loader { width: 43px; height: 43px; font-size: 17px; }
+}
 @media (max-width: 480px) {
-  .hero-motto { letter-spacing: .28em; font-size: 15.5px; }
-  .hero-motto::before, .hero-motto::after { flex-basis: 22px; }
-  .pl-motto { letter-spacing: .28em; font-size: 15px; }
-  .pl-motto::before, .pl-motto::after { flex-basis: 18px; }
+  .hero-motto { letter-spacing: .18em; font-size: 20px; gap: .5em; }
+  .hero-motto::before, .hero-motto::after { flex-basis: 12px; }
+  .seal-hero { width: 48px; height: 48px; font-size: 19px; }
+  .hero-sub { font-size: 14px; }
+  .pl-motto { letter-spacing: .18em; font-size: 18px; gap: .5em; }
+  .pl-motto::before, .pl-motto::after { flex-basis: 12px; }
+  .seal-loader { width: 39px; height: 39px; font-size: 15.5px; }
 }
